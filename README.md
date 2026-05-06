@@ -4,6 +4,8 @@ Tiny experiment: a private notes web app where the server only ever sees
 ciphertext. Rust on the backend, vanilla JS in the browser, all crypto
 client-side.
 
+Companion writeup: [Storing Private Keys on Servers](https://www.v0id.me/posts/storing-private-keys-on-servers).
+
 The original [`main.py`](main.py) is the Python reference design (with very
 verbose `[CLIENT]` / `[SERVER]` / `[WIRE]` logging) — read it if you want to
 see exactly what each side knows. This repo ports the same idea into a small
