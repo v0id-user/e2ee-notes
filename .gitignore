@@ -5,11 +5,11 @@ Cargo.lock.bak
 # Server data (live ciphertext blobs — keep out of git)
 data.json
 
-# Python (kept around for the reference design in main.py)
+# Python — local-only, this repo is Rust
+*.py
+.reference/
+pyproject.toml
+uv.lock
+.python-version
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
 .venv

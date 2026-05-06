@@ -6,11 +6,6 @@ client-side.
 
 Companion writeup: [Storing Private Keys on Servers](https://www.v0id.me/posts/storing-private-keys-on-servers).
 
-The Python reference design lives in [`.reference/main.py`](.reference/main.py)
-(with very verbose `[CLIENT]` / `[SERVER]` / `[WIRE]` logging) — read it if
-you want to see exactly what each side knows. This repo ports the same idea
-into a small real website.
-
 ## What the server stores
 
 For each user, only:
