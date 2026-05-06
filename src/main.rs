@@ -237,9 +237,53 @@ async fn delete_note(
 }
 
 async fn debug_dump(State(state): State<AppState>) -> impl IntoResponse {
-    // Lets you peek at exactly what the server has stored — proves it's all opaque.
+    // Everything the server knows. The whole point: even given all of this,
+    // an attacker still cannot read a note without brute-forcing a passphrase.
     let db = state.db.lock().unwrap().clone();
-    Json(db)
+    let sessions: Vec<_> = state
+        .sessions
+        .lock()
+        .unwrap()
+        .iter()
+        .map(|(t, u)| serde_json::json!({ "token": t, "username": u }))
+        .collect();
+
+    let total_notes: usize = db.users.values().map(|u| u.notes.len()).sum();
+    let total_blob_bytes: usize = db
+        .users
+        .values()
+        .flat_map(|u| u.notes.iter())
+        .map(|n| n.blob.len())
+        .sum();
+    let on_disk_size = tokio::fs::metadata(&state.db_path)
+        .await
+        .map(|m| m.len())
+        .unwrap_or(0);
+
+    Json(serde_json::json!({
+        "config": {
+            "db_path": state.db_path,
+            "on_disk_bytes": on_disk_size,
+            "auth_key_hash_algo": "SHA-256",
+            "expected_browser_argon2id": {
+                "iterations": 3,
+                "memory_kib": 64 * 1024,
+                "parallelism": 4,
+                "output_len_bytes": 64,
+                "split": "first 32B = auth_key (sent), last 32B = wrap_key (kept in browser)"
+            },
+            "expected_browser_aead": "AES-GCM, 12-byte random nonce, blob = nonce || ciphertext (base64)"
+        },
+        "stats": {
+            "user_count": db.users.len(),
+            "session_count": sessions.len(),
+            "note_count": total_notes,
+            "ciphertext_bytes_total": total_blob_bytes,
+        },
+        "users": db.users,
+        "sessions": sessions,
+        "note": "this endpoint dumps every byte the server holds. nothing here is enough to read a note."
+    }))
 }
 
 #[tokio::main]
