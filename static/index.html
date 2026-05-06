@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E2EE Notes — server can't read them</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>E2EE Notes</h1>
+      <p class="muted">
+        Argon2id-derived key in the browser. Server stores ciphertext only.
+        <a href="/api/_debug/dump" target="_blank">Peek at server state</a>.
+      </p>
+    </header>
+
+    <section id="auth">
+      <div class="row">
+        <input id="username" placeholder="username" autocomplete="username" />
+        <input id="passphrase" type="password" placeholder="passphrase" autocomplete="current-password" />
+      </div>
+      <div class="row">
+        <button id="register-btn">Register</button>
+        <button id="login-btn">Login</button>
+        <span id="status" class="muted"></span>
+      </div>
+    </section>
+
+    <section id="app" hidden>
+      <div class="row">
+        <span>Logged in as <strong id="who"></strong></span>
+        <button id="logout-btn" class="ghost">Log out</button>
+      </div>
+      <textarea id="note-input" placeholder="write a note — it gets encrypted before it leaves your browser"></textarea>
+      <div class="row">
+        <button id="add-btn">Save note</button>
+      </div>
+      <ul id="notes"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
